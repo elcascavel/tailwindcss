@@ -1,10 +1,11 @@
 {
   "name": "tailwind-dracula",
-  "version": "1.1.1",
-  "description": "A super tiny tailwind plugin that enables the use of the Dracula colour palette.",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "A Tailwind theme that enables the use of the Dracula colour palette.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "npm run build",
+    "build": "sass --no-source-map src/theme.scss:./dracula.css",
+    "watch": "sass --no-source-map --watch src/dracula.scss:./dracula.css"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,8 @@
     "url": "https://github.com/dracula/tailwind/issues"
   },
   "peerDependencies": {
-    "tailwindcss": "2.x || 3.x || 4.x"
+    "tailwindcss": "4.x",
+    "sass": "^1.89.1"
   },
   "homepage": "https://draculatheme.com/tailwind"
 }

@@ -1,0 +1,94 @@
+$flavor: "dracula" !default;
+$dark-variant: "dracula";
+$prefix: "-drac";
+
+@use "sass:color";
+@use "sass:list";
+@use "sass:map";
+
+@use "./_palette.scss" as mypalette;
+
+// Define variants map
+$variants: (
+  default: 500,
+  tint: (
+    400,
+    300,
+    200,
+    100,
+    50,
+  ),
+  shade: (
+    600,
+    700,
+    800,
+    900,
+  ),
+);
+
+// Function to get color from palette
+@function get-drac-color($flavor, $color-name, $variant: 500) {
+  @return map.get(
+    map.get(map.get(mypalette.$palette, $flavor), $color-name),
+    $variant
+  );
+}
+
+// Mixin to generate base variables
+@mixin createFlavorPalette($flavor) {
+  @each $color-name, $shades in map.get(mypalette.$palette, $flavor) {
+    // Base 500
+    --drac-color-#{$color-name}: #{get-drac-color($flavor, $color-name)};
+
+    // All variants
+    @each $variant-type, $variant-identifier in $variants {
+      @if ($variant-type == "default") {
+        --drac-color-#{$color-name}-500: #{get-drac-color(
+            $flavor,
+            $color-name
+          )};
+      } @else {
+        @for $i from 1 through list.length($variant-identifier) {
+          --drac-color-#{$color-name}-#{list.nth($variant-identifier, $i)}: #{get-drac-color(
+              $flavor,
+              $color-name,
+              list.nth($variant-identifier, $i)
+            )};
+        }
+      }
+    }
+  }
+}
+
+// Emit base layer
+@layer base {
+  :root {
+    @include createFlavorPalette("dracula");
+  }
+}
+
+// Emit @theme inline variables
+@theme inline {
+  @each $color-name, $shades in map.get(mypalette.$palette, $flavor) {
+    // Base 500
+    --color#{$prefix}-#{$color-name}: var(--drac-color-#{$color-name});
+
+    // All variants
+    @each $variant-type, $variant-identifier in $variants {
+      @if ($variant-type == "default") {
+        --color#{$prefix}-#{$color-name}-500: var(
+          --drac-color-#{$color-name}-500
+        );
+      } @else {
+        @for $i from 1 through list.length($variant-identifier) {
+          --color#{$prefix}-#{$color-name}-#{list.nth($variant-identifier, $i)}: var(
+            --drac-color-#{$color-name}-#{list.nth($variant-identifier, $i)}
+          );
+        }
+      }
+    }
+  }
+}
+
+// Custom variant for dracula class
+@custom-variant dracula (&:where(.dracula, .dracula *));
