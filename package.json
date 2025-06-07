@@ -5,12 +5,11 @@
   "main": "dist/tailwind-dracula.css",
   "scripts": {
     "prepare": "npm run build",
-    "build": "sass --no-source-map src/theme.scss dist/dracula.css",
-    "watch": "sass --no-source-map --watch src/dracula.scss dist/dracula.css"
+    "build": "sass --no-source-map src/theme.scss dracula.css",
+    "watch": "sass --no-source-map --watch src/dracula.scss dracula.css"
   },
   "files": [
-    "dist",
-    "dist/dracula.css"
+    "dracula.css"
   ],
   "repository": {
     "type": "git",
